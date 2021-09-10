@@ -1,0 +1,12 @@
+# LDAP Domain
+
+ldap_domain_name: demo
+ldap_server_url: ldap://demo.veritas.com
+ldap_user_base_dn: "DC=demo,DC=veritas,DC=com"
+ldap_group_base_dn: "DC=demo,DC=veritas,DC=com"
+ldap_ad_user_dn: "CN=Martin Hughes,OU=Users - Admin,DC=demo,DC=veritas,DC=com"
+ldap_domain_type: msad
+ldap_ad_user_password: "L@ndon2012xx"
+
+
+
