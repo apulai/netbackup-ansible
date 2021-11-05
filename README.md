@@ -52,7 +52,7 @@ To use this project
 
     1. Clone the repository from GitHub and move to your Ansible Control Host:
  
-         git clone http://www.GitHub/ansible/netbackup-ansible.git
+         git clone https://github.com/VeritasOS/netbackup-ansible.git
 
 	2. Experiment with the different roles on a test environment:
 
@@ -197,22 +197,3 @@ The software described in this book is furnished under a license agreement and m
 ## Legal Notice
 Last updated: 2021-07-23
 Legal Notice
-Copyright © 2021 Veritas Technologies LLC. All rights reserved.
-Veritas, the Veritas Logo, and NetBackup are trademarks or registered trademarks of Veritas Technologies LLC or its affiliates in the U.S. and other countries. Other names may be trademarks of their respective owners.
-This product may contain third-party software for which Veritas is required to provide attribution to the third party ("Third-party Programs"). Some of the Third-party Programs are available under open source or free software licenses. The License Agreement accompanying the Software does not alter any rights or obligations you may have under those open source or free software licenses. Refer to the Third-party Legal Notices document accompanying this Veritas product or available at: https://www.veritas.com/about/legal/license-agreements
-The product described in this document is distributed under licenses restricting its use, copying, distribution, and decompilation/reverse engineering. No part of this document may be reproduced in any form by any means without prior written authorization of Veritas Technologies LLC and its licensors, if any.
-THE DOCUMENTATION IS PROVIDED "AS IS" AND ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE EXTENT THAT SUCH DISCLAIMERS ARE HELD TO BE LEGALLY INVALID. VERITAS TECHNOLOGIES LLC SHALL NOT BE LIABLE FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES IN
-CONNECTION WITH THE FURNISHING, PERFORMANCE, OR USE OF THIS
-DOCUMENTATION. THE INFORMATION CONTAINED IN THIS DOCUMENTATION IS SUBJECT TO CHANGE WITHOUT NOTICE.
-
-The Licensed Software and Documentation are deemed to be commercial computer software as defined in FAR 12.212 and subject to restricted rights as defined in FAR Section 52.227-19 "Commercial Computer Software - Restricted Rights" and DFARS 227.7202, et seq. "Commercial Computer Software and Commercial Computer Software Documentation," as applicable, and any successor regulations, whether delivered by Veritas as on premises or hosted services. Any use, modification, reproduction release, performance, display or disclosure
-of the Licensed Software and Documentation by the U.S. Government shall be solely in accordance with the terms of this Agreement.
-Veritas Technologies LLC
-2625 Augustine Drive
-Santa Clara, CA 95054
-http://www.veritas.com
-
-## Third-Party Legal Notices
-This Veritas product may contain third party software for which Veritas is required to provide attribution ("Third Party Programs"). Some of the Third Party Programs are available under open source or free software licenses. The License Agreement accompanying the Licensed Software does not alter any rights or obligations you may have under those open source or free software licenses. This document or appendix contains proprietary notices for the Third Party Programs and the licenses for the Third Party Programs, where applicable.
-The following copyright statements and licenses apply to various open source software components (or portions thereof) that are distributed with the Licensed Software.
-The Licensed Software that includes this file does not necessarily use all the open source software components referred to below and may also only use portions of a given component.

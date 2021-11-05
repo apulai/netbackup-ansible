@@ -29,7 +29,7 @@ This role is part of a collection of roles available in netbackup-ansible projec
 
   1. Clone the repository from GitHub and move to your Ansible Control Host:
 
-           git clone http://www.GitHub/ansible/netbackup-ansible.git
+           git clone https://github.com/VeritasOS/netbackup-ansible.git
 
   2. Update the role variables: 
 
@@ -90,14 +90,4 @@ A sample playbook and invetory file is provided below:
 | nbu-api-access-key | 1.0 | Inital release |
 
 # License
-
-The following components are available under the General Public License “GPL” 2.0 and/or the General Public License “GPL 3.0” provided herein. The source code for these GPL component(s) may be obtained at: https://github.com/VeritasOS/netbackup-ansible
-
-
-
-
-
-
-
-
 

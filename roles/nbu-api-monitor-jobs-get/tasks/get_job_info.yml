@@ -5,7 +5,7 @@
     method: GET
     headers:
       Content-Type: "{{ nbu_api_content_type }}"
-      Authorization: "{{ NBU_API_KEY }}"  
+      Authorization: "{{ NBU_API_KEY }}"
     validate_certs: False
     timeout: "300"
     status_code:
@@ -18,11 +18,15 @@
   tags:
     - nbu_monitor_job_info
 
+- name: -> show results
+    debug:
+      var: result1.json.value
+
 - name: -> Show query result pagination information
   set_fact:
-    total_pages: "{{ result1.json.meta.pagination.pages }}"
-    page_limit: "{{ result1.json.meta.pagination.limit }}"
-    last_page: "{{ result1.json.meta.pagination.last }}"
+    total_pages: "{{ result1.json.meta.pagination.pages | default(1) }}"
+    page_limit: "{{ result1.json.meta.pagination.limit | default(1) }}"
+    last_page: "{{ result1.json.meta.pagination.last | default(1) }}"
   tags:
     - nbu_monitor_job_info
 
@@ -32,7 +36,7 @@
     method: GET
     headers:
       Content-Type: "{{ nbu_api_content_type }}"
-      Authorization: "{{ NBU_API_KEY }}"  
+      Authorization: "{{ NBU_API_KEY }}"
     validate_certs: False
     timeout: "300"
     status_code:
@@ -45,7 +49,7 @@
   register: result2
   tags:
    - nbu_monitor_job_info
-    
+
 - name: -> Set the jobs query result as fact
   set_fact:
     job_ids: "{{ lookup('template', './get_jobs.j2') }}"
@@ -55,14 +59,14 @@
 
 - name: -> Show all job IDs
   debug:
-    msg: 
+    msg:
     - "{{ result3.ansible_facts.job_ids.split() }}"
   tags:
     - nbu_monitor_job_info
 
 - name: -> Show total number of jobs
   debug:
-    msg: 
+    msg:
     - "{{ result3.ansible_facts.job_ids.split() | length }}"
   tags:
     - nbu_monitor_job_info
