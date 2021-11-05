@@ -1,0 +1,130 @@
+GET VMware Asset:
+
+Request URL: https://localhost/netbackup/asset-service/workloads/vmware/assets/
+84ba26e1-bd89-45c6-9ad4-196b0d8f9287
+?include=assetGroups
+&meta=accessControlId
+
+Request Method: GET
+Status Code: 200
+Remote Address: 127.0.0.1:443
+Referrer Policy: strict-origin-when-cross-origin
+
+84ba26e1-bd89-45c6-9ad4-196b0d8f9287
+"type": "vmwareAsset",
+      "id": "84ba26e1-bd89-45c6-9ad4-196b0d8f9287",
+      "attributes": {
+        "assetType": "vm",
+        "commonAssetAttributes": {
+          "displayName": "Finance1",
+          "masters": [
+...
+"activeProtection": {
+          "protectionDetailsList": [
+            {
+              "protectionPlanName": "VMWare_Protection",
+              "sloId": "9daf5755-76e9-439b-b39a-00a41bb7ab61",
+              "isProtectionPlanCustomized": "NO",
+              "policyName": "VMWare_Protection+f1f7ac00-0b04-4b8c-b9cb-e87dbbb9ec8d",
+              "lastSuccessfulBackupTime": "2021-05-30T07:00:21.000Z",
+              "jobId": 89,
+              "subscriptionId": "3d38b029-8f0d-4382-b586-5eee5746c73e",
+              "protectionInheritedFromAsset": {
+                "workloadType": "VMware",
+                "assetId": "796d7469-8bf3-4e88-8ad6-3cf7285eee91",
+                "displayName": "Finance_Servers"
+              }
+            },
+            {
+              "policyName": "BACKUPNOW+21ae0de5-474f-4a83-8ab6-4f055666899b",
+              "lastSuccessfulBackupTime": "2021-11-05T07:36:21.000Z",
+              "jobId": 168
+            },
+            {
+              "policyName": "BACKUPNOW+283b61b6-8058-4bab-b2e5-298169371e7b",
+              "lastSuccessfulBackupTime": "2020-08-06T17:14:03.000Z",
+              "jobId": 24
+            }
+
+
+GET Recovery / Points - filter by AssetId:
+
+Request URL: https://localhost/netbackup/recovery-point-service/workloads/vmware/recovery-points?
+page%5Blimit%5D=100&
+page%5Boffset%5D=0&
+filter=assetId+eq+%2784ba26e1-bd89-45c6-9ad4-196b0d8f9287%27
++and+%28backupTime+ge+2021-11-01T00%3A00%3A00.000Z%29
++and+%28backupTime+le+2021-12-01T08%3A00%3A00.000Z%29
+&include=optionalVmwareRecoveryPointInfo
+
+"BackupId: 5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636097781",
+"BackupTime: 2021-11-05T07:36:21.000Z",
+"JobId: 169"
+
+
+
+Request URL: https://localhost/netbackup/catalog/image-contents
+?page%5Blimit%5D=1&
+page%5Boffset%5D=0&
+filter=%28clientName+eq+%275035c576-ea7f-ea9b-cf2f-af0630b223b6%27%29+
+and+%28path+eq+%27%2F%27%29+
+and+%28backupTime+ge+2021-11-05T07%3A36%3A21.000Z%29+
+and+%28backupTime+le+2021-11-05T07%3A36%3A21.000Z%29+
+and+%28workloadType+eq+%27VMware%27%29
+Request Method: GET
+
+Request URL: https://localhost/netbackup/recovery-point-service/workloads/vmware/recovery-points/5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636097781?include=optionalVmwareRecoveryPointInfo%2CoptionalRecoveryPointCopyInfo
+Request Method: GET
+Status Code: 200
+
+Request URL: https://localhost/netbackup/recovery/workloads/vmware/instant-access-vms
+Request Method: POST
+Status Code: 201
+
+{data: {type: "instantAccessVmV3",…}}
+data: {type: "instantAccessVmV3",…}
+attributes: {backupId: "5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636097781", copyNumber: 1,…}
+backupId: "5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636097781"
+copyNumber: 1
+esxiHost: "192.168.2.50"
+powerOn: "True"
+removeEthCards: "False"
+resourcePoolOrVapp: "/NBUESX/host/192.168.2.50/Resources"
+retention: {value: 30, unit: "DAYS"}
+unit: "DAYS"
+value: 30
+vCenter: "photon-machine.lab.local"
+vmName: "Finance1_test"
+type: "instantAccessVmV3"
+
+{"data":{"type":"instantAccessVmV3","attributes":{"backupId":"5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636097781","copyNumber":1,"vCenter":"photon-machine.lab.local","esxiHost":"192.168.2.50","resourcePoolOrVapp":"/NBUESX/host/192.168.2.50/Resources","vmName":"Finance1_test","powerOn":"True","removeEthCards":"False","retention":{"value":30,"unit":"DAYS"}}}}
+
+
+
+
+
+
+---
+Request URL: https://localhost/netbackup/admin/jobs/168
+
+{
+  "data": {
+    "type": "job",
+    "id": "168",
+    "attributes": {
+      "jobId": 168,
+      "parentJobId": 167,
+      "jobType": "SNAPSHOT",
+      "jobSubType": "IMMEDIATE",
+      "policyType": "VMWARE",
+      "policyName": "BACKUPNOW+21ae0de5-474f-4a83-8ab6-4f055666899b",
+      "scheduleType": "FULL_BACKUP",
+      "scheduleName": "-",
+      "clientName": "5035c576-ea7f-ea9b-cf2f-af0630b223b6",
+      "jobOwner": "root",
+      "jobGroup": "other",
+      "backupId": "5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636097770",
+      "destinationStorageUnitName": "MSDP_STU",
+      "destinationMediaServerName": "nbumediabyo.lab.local",
+      "dataMovement": "INSTANTRECOVERYDISK",
+      "streamNumber": -1,

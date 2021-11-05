@@ -1,0 +1,5 @@
+[localhost]
+locahost ansible_host=localhost
+
+[master]
+master.lab.local ansible_host=localhost

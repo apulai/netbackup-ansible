@@ -1,0 +1,52 @@
+- name: List singe VM by assetid
+  hosts: localhost
+  vars:
+    nbu_api_content_type:
+      application/vnd.netbackup+json;version=5.0;charset=UTF-8
+    NBU_API_KEY:
+      A8fmNjyB5DvvzAN1CnRWblMv160U1Vt5hs5P2fqj81pJh9224HRus-w9YuXnwSMa
+    nbu_api_hostname:
+      nbumaster.lab.local
+    nbu_api_baseurl:
+       https://nbumaster.lab.local:1556/netbackup
+    asset_id:
+      84ba26e1-bd89-45c6-9ad4-196b0d8f9287
+#      https://{{ nbu_api_hostname }}:1556/netbackup
+
+  tasks:
+    - name: Query singe VMs by assetId
+      uri:
+        url: https://nbumaster.lab.local:1556/netbackup/recovery-point-service/workloads/vmware/recovery-points?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27{{ asset_id }}%27&&include=optionalVmwareRecoveryPointInfo
+        method: GET
+        headers:
+          Content-Type: "{{ nbu_api_content_type }}"
+          Authorization: "{{ NBU_API_KEY }}"
+        validate_certs: False
+        timeout: "300"
+        status_code:
+          - 200
+          - 400
+          - 401
+          - 404
+          - 500
+      register:
+          result1
+
+    - name: Print full response
+      debug:
+        msg:
+         #  Innstall this filter first! Run: ansible-galaxy collection install ansible.utils
+         - "{{ lookup( 'ansible.utils.to_paths', result1.json) }}"
+
+
+    - name: Print interesting results
+      debug:
+        msg:
+          - "BackupTime: {{item.attributes.backupTime}}"
+          - "BackupId: {{item.id}}"
+          - "JobId: {{item.attributes.extendedAttributes.imageAttributes.jobId}}"
+          - "copyNumber:  {{item.attributes.extendedAttributes.imageAttributes.fragments[0].copyNumber}}"
+      loop:  "{{result1.json.data }}"
+      loop_control:
+        index_var: my_idx
+        label: "id (referenced by NBU): {{ asset_id }} recovery point: {{ my_idx }}"

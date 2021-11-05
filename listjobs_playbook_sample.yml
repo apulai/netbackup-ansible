@@ -1,0 +1,8 @@
+- name: Veritas -> Get job information from Activity Monitor
+    hosts: localhost
+    gather_facts: no
+    roles:
+      - nbu-api-monitor-jobs-get
+    vars:
+      NBU_MASTER_SERVER: master.lab.local
+      NBU_API_KEY: <API-KEY>

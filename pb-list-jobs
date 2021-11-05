@@ -1,0 +1,8 @@
+- name: get jobs
+  hosts: localhost
+  gather_facts: no
+  roles:
+    - nbu-api-monitor-jobs-get
+  vars:
+    NBU_MASTER_SERVER: nbumaster.lab.local
+    NBU_API_KEY: A8fmNjyB5DvvzAN1CnRWblMv160U1Vt5hs5P2fqj81pJh9224HRus-w9YuXnwSMa
