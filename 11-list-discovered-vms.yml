@@ -1,0 +1,61 @@
+- name: List discovered VMs
+  hosts: localhost
+  vars:
+    nbu_api_content_type:
+      application/vnd.netbackup+json;version=5.0;charset=UTF-8
+    NBU_API_KEY:
+      A8fmNjyB5DvvzAN1CnRWblMv160U1Vt5hs5P2fqj81pJh9224HRus-w9YuXnwSMa
+    nbu_api_hostname:
+      nbumaster.lab.local
+    nbu_api_baseurl:
+      "https://{{ nbu_api_hostname }}:1556/netbackup"
+
+  tasks:
+    - name: Query discovered VMs
+      uri:
+        url: "{{ nbu_api_baseurl }}/asset-service/workloads/vmware/assets?page%5Blimit%5D=10&page%5Bdisable%5D=true"
+        method: GET
+        headers:
+          Content-Type: "{{ nbu_api_content_type }}"
+          Authorization: "{{ NBU_API_KEY }}"
+        validate_certs: False
+        timeout: "300"
+        status_code:
+          - 200
+          - 400
+          - 401
+          - 404
+          - 500
+      register:
+          result1
+
+    - name: Print full response
+      debug:
+        msg:
+          - result1.json
+          #  Innstall this filter first! Run: ansible-galaxy collection install ansible.utils
+          - "{{ lookup( 'ansible.utils.to_paths', result1.json) }}"
+
+    - name: Print interesting only
+      debug:
+        msg:
+          - "displayName: {{item.attributes.commonAssetAttributes.displayName | default(-1) }}"
+          - "id (referenced by NBU): {{item.id | default(-1) }}"
+          - "instanceUuid: {{item.attributes.instanceUuid | default(-1) }}"
+          - "assetType: {{item.attributes.assetType | default(-1) }}"
+          - "vCenter: {{item.attributes.vCenter | default(-1) }}"
+          - "vmAbsolutePath: {{item.attributes.vmAbsolutePath | default(-1) }}"
+          - "vmxDatastore: {{item.attributes.vmxDatastore | default(-1) }}"
+          - "lastDiscoveredTime: {{item.attributes.commonAssetAttributes.detection.lastDiscoveredTime | default(-1)}}"
+          - "nicIpAddresses: {{item.attributes.nicIpAddresses| default(-1) }}"
+      loop:  "{{result1.json.data }}"
+      loop_control:
+        index_var: my_idx
+        label: "{{ my_idx }}"
+
+#"data[5].attributes.assetType": "vm",
+#"data[5].attributes.commonAssetAttributes.activeProtection.protectionDetailsList[0].lastSuccessfulBackupTime": "2021-05-30
+#"data[5].attributes.commonAssetAttributes.detection.lastDiscoveredTime": "2021-11-05T07:30:43.815Z",
+#"data[5].attributes.commonAssetAttributes.displayName": "Finance1",
+#"data[8].attributes.vmAbsolutePath": "/photon-machine.lab.local/NBUESX/192.168.2.50",
+# "data[8].attributes.vCenter": "photon-machine.lab.local",
