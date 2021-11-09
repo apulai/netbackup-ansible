@@ -1,4 +1,4 @@
-- name: List discovered VMs
+- name: Select VM and list backups
   hosts: localhost
   vars:
     nbu_api_content_type:
@@ -8,7 +8,9 @@
     nbu_api_hostname:
       nbumaster.lab.local
     nbu_api_baseurl:
-      "https://{{ nbu_api_hostname }}:1556/netbackup"
+       "https://{{ nbu_api_hostname }}:1556/netbackup"
+    asset_id:
+      84ba26e1-bd89-45c6-9ad4-196b0d8f9287
 
   tasks:
     - name: Query discovered VMs
@@ -29,14 +31,7 @@
       register:
           result1
 
-    - name: Print full response
-      debug:
-        msg:
-          - result1.json
-          #  Innstall this filter first! Run: ansible-galaxy collection install ansible.utils
-          - "{{ lookup( 'ansible.utils.to_paths', result1.json) }}"
-
-    - name: Print interesting fields2
+    - name: Print VM fields
       debug:
         msg:
           - "displayName: {{item.attributes.commonAssetAttributes.displayName | default(-1) }}"
@@ -53,9 +48,38 @@
         index_var: my_idx
         label: "{{ my_idx }}"
 
-#"data[5].attributes.assetType": "vm",
-#"data[5].attributes.commonAssetAttributes.activeProtection.protectionDetailsList[0].lastSuccessfulBackupTime": "2021-05-30
-#"data[5].attributes.commonAssetAttributes.detection.lastDiscoveredTime": "2021-11-05T07:30:43.815Z",
-#"data[5].attributes.commonAssetAttributes.displayName": "Finance1",
-#"data[8].attributes.vmAbsolutePath": "/photon-machine.lab.local/NBUESX/192.168.2.50",
-# "data[8].attributes.vCenter": "photon-machine.lab.local",
+    - name: Query singe VM data by assetId (Backups since 1st Nov 2021)
+      uri:
+        url: "{{ nbu_api_baseurl }}/recovery-point-service/workloads/vmware/recovery-points?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27{{asset_id}}%27+and+%28backupTime+ge+2021-11-01T00%3A00%3A00.000Z%29&include=optionalVmwareRecoveryPointInfo"
+        method: GET
+        headers:
+          Content-Type: "{{ nbu_api_content_type }}"
+          Authorization: "{{ NBU_API_KEY }}"
+        validate_certs: False
+        timeout: "300"
+        status_code:
+          - 200
+          - 400
+          - 401
+          - 404
+          - 500
+      register:
+          result2
+
+#    - name: Print full response
+#      debug:
+#        msg:
+#         #  Innstall this filter first! Run: ansible-galaxy collection install ansible.utils
+#         - "{{ lookup( 'ansible.utils.to_paths', result2.json) }}"
+
+    - name: Print Asset results
+      debug:
+        msg:
+          - "BackupTime: {{item.attributes.backupTime}}"
+          - "BackupId: {{item.id}}"
+          - "JobId: {{item.attributes.extendedAttributes.imageAttributes.jobId}}"
+          - "copyNumber:  {{item.attributes.extendedAttributes.imageAttributes.fragments[0].copyNumber}}"
+      loop:  "{{result2.json.data }}"
+      loop_control:
+        index_var: my_idx2
+        label: "id (referenced by NBU): {{ asset_id }} recovery point: {{ my_idx2 }}"

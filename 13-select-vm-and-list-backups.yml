@@ -1,0 +1,33 @@
+- name: Select VM and list backups
+  hosts: localhost
+  vars:
+    nbu_api_content_type:
+      application/vnd.netbackup+json;version=5.0;charset=UTF-8
+    NBU_API_KEY:
+      A8fmNjyB5DvvzAN1CnRWblMv160U1Vt5hs5P2fqj81pJh9224HRus-w9YuXnwSMa
+    nbu_api_hostname:
+      nbumaster.lab.local
+    nbu_api_baseurl:
+       "https://{{ nbu_api_hostname }}:1556/netbackup"
+    asset_id:
+      84ba26e1-bd89-45c6-9ad4-196b0d8f9287
+
+
+  tasks:
+    - name: Query singe VMs by assetId
+      include: 11_list_discovered_vms.yml
+
+    - name: List Backups for VM
+      include: 12-list-single-vm-by-assetid.yml
+
+    - name: Print interesting results again
+      debug:
+        msg:
+          - "BackupTime: {{item.attributes.backupTime}}"
+          - "BackupId: {{item.id}}"
+          - "JobId: {{item.attributes.extendedAttributes.imageAttributes.jobId}}"
+          - "copyNumber:  {{item.attributes.extendedAttributes.imageAttributes.fragments[0].copyNumber}}"
+      loop:  "{{result2.json.data }}"
+      loop_control:
+        index_var: my_idx
+        label: "id (referenced by NBU): {{ asset_id }} recovery point: {{ my_idx }}"

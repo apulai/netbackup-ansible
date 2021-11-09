@@ -12,11 +12,10 @@
     asset_id:
       84ba26e1-bd89-45c6-9ad4-196b0d8f9287
 
-
   tasks:
     - name: Query singe VMs by assetId
       uri:
-        url: "{{ nbu_api_baseurl }}/recovery-point-service/workloads/vmware/recovery-points?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27{{ asset_id }}%27&&include=optionalVmwareRecoveryPointInfo"
+        url: "{{ nbu_api_baseurl }}/recovery-point-service/workloads/vmware/recovery-points?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27{{asset_id}}%27+and+%28backupTime+ge+2021-11-01T00%3A00%3A00.000Z%29&include=optionalVmwareRecoveryPointInfo"
         method: GET
         headers:
           Content-Type: "{{ nbu_api_content_type }}"
@@ -30,13 +29,14 @@
           - 404
           - 500
       register:
-          result1
+        result2
 
-    - name: Print full response
-      debug:
-        msg:
-         #  Innstall this filter first! Run: ansible-galaxy collection install ansible.utils
-         - "{{ lookup( 'ansible.utils.to_paths', result1.json) }}"
+#    - name: Print full response
+#      debug:
+#        msg:
+#          - result2.json
+#          #  Innstall this filter first! Run: ansible-galaxy collection install ansible.utils
+#          - "{{ lookup( 'ansible.utils.to_paths', result2.json) }}"
 
 
     - name: Print interesting results
@@ -46,7 +46,7 @@
           - "BackupId: {{item.id}}"
           - "JobId: {{item.attributes.extendedAttributes.imageAttributes.jobId}}"
           - "copyNumber:  {{item.attributes.extendedAttributes.imageAttributes.fragments[0].copyNumber}}"
-      loop:  "{{result1.json.data }}"
+      loop:  "{{result2.json.data }}"
       loop_control:
         index_var: my_idx
         label: "id (referenced by NBU): {{ asset_id }} recovery point: {{ my_idx }}"
