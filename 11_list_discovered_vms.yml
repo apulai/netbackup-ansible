@@ -8,13 +8,12 @@
     nbu_api_hostname:
       nbumaster.lab.local
     nbu_api_baseurl:
-       https://nbumaster.lab.local:1556/netbackup
-#      https://{{ nbu_api_hostname }}:1556/netbackup
+      "https://{{ nbu_api_hostname }}:1556/netbackup"
 
   tasks:
     - name: Query discovered VMs
       uri:
-        url: https://nbumaster.lab.local:1556/netbackup/asset-service/workloads/vmware/assets?page%5Blimit%5D=10&page%5Bdisable%5D=true
+        url: "{{ nbu_api_baseurl }}/asset-service/workloads/vmware/assets?page%5Blimit%5D=10&page%5Bdisable%5D=true"
         method: GET
         headers:
           Content-Type: "{{ nbu_api_content_type }}"
