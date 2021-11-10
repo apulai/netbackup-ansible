@@ -12,13 +12,20 @@ nbu_api_baseurl="https://"+nbu_api_hostname+":1556/netbackup"
 headers={'Accept': nbu_api_content_type,
          'Authorization': NBU_API_KEY}
 
-#params=dict(
-#'page[limit]'='10',
-#'page[disable]'='true',
-#)
+#          "/asset-service/workloads/vmware/assets?page%5Blimit%5D=10&page%5Bdisable%5D=true",
+#      ?page%5Blimit%5D=10&page%5Bdisable%5D=true",
+params={
+ 'page': {
+  'limit': 10,
+  'disable': 'true'
+ }
+}
+
 
 response=requests.get(nbu_api_baseurl+
-          "/asset-service/workloads/vmware/assets?page%5Blimit%5D=10&page%5Bdisable%5D=true",
+
+          "/asset-service/workloads/vmware/assets",
+          params = params,
           verify=False,
           headers=headers)
 

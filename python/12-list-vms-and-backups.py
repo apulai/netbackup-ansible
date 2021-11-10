@@ -12,13 +12,18 @@ asset_id="84ba26e1-bd89-45c6-9ad4-196b0d8f9287"
 headers={'Accept': nbu_api_content_type,
          'Authorization': NBU_API_KEY}
 
-#params=dict(
-#'page[limit]'='10',
-#'page[disable]'='true',
-#)
+#          "/asset-service/workloads/vmware/assets?page%5Blimit%5D=10&page%5Bdisable%5D=true",
+#      ?page%5Blimit%5D=10&page%5Bdisable%5D=true",
+params={
+ 'page': {
+  'limit': 10,
+  'disable': 'true'
+ }
+}
 
 response=requests.get(nbu_api_baseurl+
-          "/asset-service/workloads/vmware/assets?page%5Blimit%5D=10&page%5Bdisable%5D=true",
+          "/asset-service/workloads/vmware/assets",
+          params = params,
           verify=False,
           headers=headers)
 
@@ -49,8 +54,22 @@ print("NBU asset id: ",asset_id)
 
 print()
 print("Backups:")
+
+#"/recovery-point-service/workloads/vmware/recovery-points",
+#          ?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27"+asset_id+"%27+and+%28backupTime+ge+2021-11-01T00%3A00%3A00.000Z%29&include=optionalVmwareRecoveryPointInfo",
+params={
+ 'page': {
+  'limit': 10,
+  'disable': 'true',
+  'offset': 0
+ },
+ 'filter': "assetId eq '"+asset_id+"' and (backupTime ge 2021-11-01T00:00:00.000Z)",
+ 'include' : 'optionalVmwareRecoveryPointInfo'
+}
+
 response=requests.get(nbu_api_baseurl+
-          "/recovery-point-service/workloads/vmware/recovery-points?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27"+asset_id+"%27+and+%28backupTime+ge+2021-11-01T00%3A00%3A00.000Z%29&include=optionalVmwareRecoveryPointInfo",
+          "/recovery-point-service/workloads/vmware/recovery-points",
+          params = params,
           verify=False,
           headers=headers)
 

@@ -100,6 +100,32 @@ type: "instantAccessVmV3"
 {"data":{"type":"instantAccessVmV3","attributes":{"backupId":"5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636097781","copyNumber":1,"vCenter":"photon-machine.lab.local","esxiHost":"192.168.2.50","resourcePoolOrVapp":"/NBUESX/host/192.168.2.50/Resources","vmName":"Finance1_test","powerOn":"True","removeEthCards":"False","retention":{"value":30,"unit":"DAYS"}}}}
 
 
+Request URL: https://localhost/netbackup/recovery/workloads/vmware/instant-access-vms
+Accept: application/vnd.netbackup+json;version=3.0
+Request Method: POST
+Status Code: 201
+Remote Address: 127.0.0.1:443
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US
+Content-Type: application/vnd.netbackup+json;version=3.0
+
+Referrer Policy: strict-origin-when-cross-origin
+{"data":{"type":"instantAccessVmV3","attributes":{"backupId":"5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636454709","copyNumber":1,"vCenter":"photon-machine.lab.local","esxiHost":"192.168.2.50","resourcePoolOrVapp":"/NBUESX/host/192.168.2.50/Resources","vmName":"Finance1_tst","powerOn":"True","removeEthCards":"False","retention":{"value":30,"unit":"DAYS"}}}}
+{"data":
+{"type":"instantAccessVmV3",
+"attributes":{
+  "backupId":"5035c576-ea7f-ea9b-cf2f-af0630b223b6_1636454709",
+  "copyNumber":1,
+  "vCenter":"photon-machine.lab.local",
+  "esxiHost":"192.168.2.50",
+  "resourcePoolOrVapp":"/NBUESX/host/192.168.2.50/Resources",
+  "vmName":"Finance1_tst",
+  "powerOn":"True",
+  "removeEthCards":"False",
+  "retention":{"value":30,"unit":"DAYS"}
+  }
+}
+}
 
 
 
