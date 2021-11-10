@@ -1,7 +1,10 @@
 import json
 import requests
+from datetime import datetime, timedelta
 
 requests.urllib3.disable_warnings()
+
+
 
 nbu_api_content_typev5="application/vnd.netbackup+json;version=5.0;charset=UTF-8"
 nbu_api_content_typev3="application/vnd.netbackup+json;version=3.0"
@@ -57,13 +60,18 @@ myvcenter=parsed1['data'][i]['attributes']['vCenter']
 myvmabsolutepath=parsed1['data'][i]['attributes']['vmAbsolutePath']
 
 print()
-print("Listing backups for:")
+print("Listing backups for the last 30 days:")
 print("Machine index: ", i)
 print("Displayname: ",parsed1['data'][i]['attributes']['commonAssetAttributes']['displayName'])
 assted_id=parsed1['data'][i]['id']
 print("NBU asset id: ",asset_id)
 
 print()
+tnow = datetime.now()
+t30dayago = tnow - timedelta(days = 30)
+print(tnow.strftime('%Y-%m-%dT%H:%M:%SZ'), t30dayago.strftime('%Y-%m-%dT%H:%M:%SZ'))
+
+
 print("Backups:")
 #"/recovery-point-service/workloads/vmware/recovery-points",
 #          ?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27"+asset_id+"%27+and+%28backupTime+ge+2021-11-01T00%3A00%3A00.000Z%29&include=optionalVmwareRecoveryPointInfo",
@@ -73,7 +81,8 @@ params={
   'disable': 'true',
   'offset': 0
  },
- 'filter': "assetId eq '"+asset_id+"' and (backupTime ge 2021-11-01T00:00:00.000Z)",
+ #'filter': "assetId eq '"+asset_id+"' and (backupTime ge 2021-11-01T00:00:00.000Z)"
+ 'filter': "assetId eq '"+asset_id+"' and (backupTime ge "+t30dayago.strftime('%Y-%m-%dT%H:%M:%SZ')+")",
  'include' : 'optionalVmwareRecoveryPointInfo'
 }
 response=requests.get(nbu_api_baseurl+
@@ -81,6 +90,8 @@ response=requests.get(nbu_api_baseurl+
           params=params,
           verify=False,
           headers=headerv5)
+
+
 
 parsed2=response.json()
 
@@ -92,13 +103,14 @@ for idx,item in enumerate(parsed2['data']):
         print("copyNumber:",item['attributes']['extendedAttributes']['imageAttributes']['fragments'][0]['copyNumber'])
         print("")
 
-idx = int(input("Please enter backup index: ") or 0 )
+idx = int(input("Please enter backup index: (default: latest) ") or 0 )
 mybackupid=parsed2['data'][idx]['id']
 mycopynumber=parsed2['data'][idx]['attributes']['extendedAttributes']['imageAttributes']['fragments'][0]['copyNumber']
 
-mynewname = input("Please enter a new Name of the Instant Access VM: ") or mydisplayname+"-IA"
-mypoweron = input("PowerOn (True / False): ") or "True"
-myremoveethcards = input("removeEthCards (True/False): ") or "True"
+proposedname = mydisplayname+"-IA-"+tnow.strftime('%Y%m%dT%H%M%SZ')
+mynewname = input("Please enter a new Name of the Instant Access VM: (deafult: "+proposedname+")") or proposedname
+mypoweron = input("PowerOn (True / False): (default: True) ") or "True"
+myremoveethcards = input("removeEthCards (True/False): (default: True) ") or "True"
 
 
 myattributes = {

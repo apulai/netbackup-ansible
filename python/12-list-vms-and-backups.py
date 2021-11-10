@@ -1,5 +1,6 @@
 import json
 import requests
+from datetime import datetime, timedelta
 
 requests.urllib3.disable_warnings()
 
@@ -45,8 +46,13 @@ for idx,item in enumerate(parsed1['data']):
 
 
 i = int(input("Please enter the idx of the VM: "))
+
+tnow = datetime.now()
+t30dayago = tnow - timedelta(days = 30)
+print(tnow.strftime('%Y-%m-%dT%H:%M:%SZ'), t30dayago.strftime('%Y-%m-%dT%H:%M:%SZ'))
+
 print()
-print("Listing backups for:")
+print("Listing backups for the last 30 days:")
 print("Machine index: ", i)
 print("Displayname: ",parsed1['data'][i]['attributes']['commonAssetAttributes']['displayName'])
 assted_id=parsed1['data'][i]['id']
@@ -63,7 +69,8 @@ params={
   'disable': 'true',
   'offset': 0
  },
- 'filter': "assetId eq '"+asset_id+"' and (backupTime ge 2021-11-01T00:00:00.000Z)",
+#'filter': "assetId eq '"+asset_id+"' and (backupTime ge 2021-11-01T00:00:00.000Z)"
+ 'filter': "assetId eq '"+asset_id+"' and (backupTime ge "+t30dayago.strftime('%Y-%m-%dT%H:%M:%SZ')+")",
  'include' : 'optionalVmwareRecoveryPointInfo'
 }
 
