@@ -6,16 +6,23 @@ requests.urllib3.disable_warnings()
 
 
 
-nbu_api_content_typev5="application/vnd.netbackup+json;version=5.0;charset=UTF-8"
-nbu_api_content_typev3="application/vnd.netbackup+json;version=3.0"
 
 NBU_API_KEY="A8fmNjyB5DvvzAN1CnRWblMv160U1Vt5hs5P2fqj81pJh9224HRus-w9YuXnwSMa"
 nbu_api_hostname="nbumaster.lab.local"
 nbu_api_baseurl="https://"+nbu_api_hostname+":1556/netbackup"
 asset_id="84ba26e1-bd89-45c6-9ad4-196b0d8f9287"
 
+nbu_api_content_typev6="application/vnd.netbackup+json;version=6.0"
+nbu_api_content_typev5="application/vnd.netbackup+json;version=5.0;charset=UTF-8"
+nbu_api_content_typev3="application/vnd.netbackup+json;version=3.0"
+
+headerv6={'Accept': nbu_api_content_typev6,
+         'Authorization': NBU_API_KEY,
+         'Content-Type':nbu_api_content_typev6}
+
 headerv5={'Accept': nbu_api_content_typev5,
-         'Authorization': NBU_API_KEY}
+         'Authorization': NBU_API_KEY,
+         'Content-Type':nbu_api_content_typev5}
 
 headerv3={'Accept': nbu_api_content_typev3,
          'Authorization': NBU_API_KEY,
@@ -30,12 +37,13 @@ params={
  }
 }
 
+print("Query start...")
 response=requests.get(nbu_api_baseurl+
           "/asset-service/workloads/vmware/assets",
           params=params,
           verify=False,
           headers=headerv5)
-
+print(response)
 parsed1=response.json()
 # print(json.dumps(parsed, indent=4, sort_keys=True))
 
@@ -71,8 +79,6 @@ tnow = datetime.now()
 t30dayago = tnow - timedelta(days = 30)
 print(tnow.strftime('%Y-%m-%dT%H:%M:%SZ'), t30dayago.strftime('%Y-%m-%dT%H:%M:%SZ'))
 
-
-print("Backups:")
 #"/recovery-point-service/workloads/vmware/recovery-points",
 #          ?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27"+asset_id+"%27+and+%28backupTime+ge+2021-11-01T00%3A00%3A00.000Z%29&include=optionalVmwareRecoveryPointInfo",
 params={
@@ -85,16 +91,19 @@ params={
  'filter': "assetId eq '"+asset_id+"' and (backupTime ge "+t30dayago.strftime('%Y-%m-%dT%H:%M:%SZ')+")",
  'include' : 'optionalVmwareRecoveryPointInfo'
 }
+
+print("Query start...")
 response=requests.get(nbu_api_baseurl+
           "/recovery-point-service/workloads/vmware/recovery-points",
           params=params,
           verify=False,
           headers=headerv5)
 
-
-
+# IDE KELL MEG EGY CALL AMikor megvan a backupid
+ #'include' : 'optionalVmwareRecoveryPointInfo,optionalRecoveryPointCopyInfo'
+print(response)
 parsed2=response.json()
-
+print("Backups:")
 for idx,item in enumerate(parsed2['data']):
         print("Index:", idx)
         print("BackupTime:\t",item['attributes']['backupTime'])
@@ -111,6 +120,23 @@ proposedname = mydisplayname+"-IA-"+tnow.strftime('%Y%m%dT%H%M%SZ')
 mynewname = input("Please enter a new Name of the Instant Access VM: (deafult: "+proposedname+")") or proposedname
 mypoweron = input("PowerOn (True / False): (default: True) ") or "True"
 myremoveethcards = input("removeEthCards (True/False): (default: True) ") or "True"
+
+params={
+ 'include' : 'optionalVmwareRecoveryPointInfo,optionalRecoveryPointCopyInfo'
+}
+
+print("Query start...")
+response=requests.get(nbu_api_baseurl+
+          "/recovery-point-service/workloads/vmware/recovery-points/"+mybackupid,
+          params=params,
+          verify=False,
+          headers=headerv6)
+
+# IDE KELL MEG EGY CALL AMikor megvan a backupid
+ #'include' : ''
+print(response.status_code)
+parsed3=response.json()
+print(parsed3)
 
 
 myattributes = {
@@ -135,6 +161,7 @@ myobj = { "data": mydata}
 print("header:", headerv3)
 print("body:", myobj)
 
+print("Query start...")
 response=requests.post(nbu_api_baseurl+
           "/recovery/workloads/vmware/instant-access-vms",
           verify=False,

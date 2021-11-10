@@ -3,6 +3,8 @@
   vars:
     nbu_api_content_type:
       application/vnd.netbackup+json;version=5.0;charset=UTF-8
+    nbu_api_content_typev6:
+      application/vnd.netbackup+json;version=6.0
     NBU_API_KEY:
       A8fmNjyB5DvvzAN1CnRWblMv160U1Vt5hs5P2fqj81pJh9224HRus-w9YuXnwSMa
     nbu_api_hostname:
@@ -18,7 +20,7 @@
         url: "{{ nbu_api_baseurl }}/recovery-point-service/workloads/vmware/recovery-points?page%5Blimit%5D=100&page%5Boffset%5D=0&filter=assetId+eq+%27{{asset_id}}%27+and+%28backupTime+ge+2021-11-01T00%3A00%3A00.000Z%29&include=optionalVmwareRecoveryPointInfo"
         method: GET
         headers:
-          Content-Type: "{{ nbu_api_content_type }}"
+          Content-Type: "{{ nbu_api_content_typev6 }}"
           Authorization: "{{ NBU_API_KEY }}"
         validate_certs: False
         timeout: "300"
@@ -31,12 +33,12 @@
       register:
         result2
 
-#    - name: Print full response
-#      debug:
-#        msg:
+    - name: Print full response
+      debug:
+        msg:
 #          - result2.json
 #          #  Innstall this filter first! Run: ansible-galaxy collection install ansible.utils
-#          - "{{ lookup( 'ansible.utils.to_paths', result2.json) }}"
+          - "{{ lookup( 'ansible.utils.to_paths', result2.json) }}"
 
 
     - name: Print interesting results

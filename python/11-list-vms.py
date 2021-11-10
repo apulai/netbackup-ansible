@@ -21,14 +21,14 @@ params={
  }
 }
 
-
+print("Query start...")
 response=requests.get(nbu_api_baseurl+
 
           "/asset-service/workloads/vmware/assets",
           params = params,
           verify=False,
           headers=headers)
-
+print(response.status_code)
 parsed=response.json()
 # print(json.dumps(parsed, indent=4, sort_keys=True))
 
