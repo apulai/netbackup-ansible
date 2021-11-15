@@ -13,7 +13,7 @@
   tasks:
     - name: Query discovered VMs
       uri:
-        url: "{{ nbu_api_baseurl }}/asset-service/workloads/vmware/assets?page%5Blimit%5D=10&page%5Bdisable%5D=true"
+        url: "{{ nbu_api_baseurl }}"
         method: GET
         headers:
           Content-Type: "{{ nbu_api_content_type }}"
